@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  mongodb:
+    image: mongo:6.0
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  consumer:
+    build: .
+    depends_on:
+      - mongodb
+    env_file: 
+      - .env
+    deploy:
+      replicas: 3   # puedes poner un número inicial, luego escalar
+    restart: always
+
+volumes:
+  mongo_data:

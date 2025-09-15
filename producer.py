@@ -3,6 +3,7 @@
 import os
 import time
 import pandas as pd
+import numpy as np
 from dotenv import load_dotenv
 from confluent_kafka import SerializingProducer
 from confluent_kafka.schema_registry import SchemaRegistryClient
@@ -62,6 +63,26 @@ producer = SerializingProducer(producer_conf)
 # ---------- Leer CSV con Pandas y producir mensajes ----------
 def produce_from_csv(file_path: str):
     df = pd.read_csv(file_path)
+    
+    df["TRANSPORTATION_DISTANCE_IN_KM"] = df["TRANSPORTATION_DISTANCE_IN_KM"].fillna(0).astype(int)
+    
+    df = df.replace({np.nan: None})
+   
+    df["Driver_MobileNo"] = (
+                            df["Driver_MobileNo"]
+                            .fillna("")                      # si hay NaN, los convierte en vacío
+                            .astype(str)                     # convertir a string
+                            .str.replace(r"\.0$", "", regex=True)  # eliminar .0 al final
+                            )
+
+    # Convertir a string el campo Minimum_kms_to_be_covered_in_a_day
+    df["Minimum_kms_to_be_covered_in_a_day"] = (
+        df["Minimum_kms_to_be_covered_in_a_day"]
+        .fillna("")
+        .astype(str)
+        .str.replace(r"\.0$", "", regex=True)
+    )
+
 
     for _, row in df.iterrows():
         try:
