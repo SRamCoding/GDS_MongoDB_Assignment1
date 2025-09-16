@@ -1,1 +1,63 @@
-.env
+# -----------------------
+# Python
+# -----------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# -----------------------
+# Virtual Environment
+# -----------------------
+venv/
+ENV/
+env/
+.env/
+*.env
+
+# -----------------------
+# IDEs / Editors
+# -----------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# -----------------------
+# Logs
+# -----------------------
+*.log
+logs/
+kafka-logs/
+*.pid
+*.sock
+
+# -----------------------
+# MongoDB
+# -----------------------
+*.bson
+*.ns
+*.wt
+*.lock
+dump/
+mongodb-data/
+*.bak
+*.db
+
+# -----------------------
+# FastAPI / Uvicorn
+# -----------------------
+*.pid
+*.sock
+
+# -----------------------
+# System
+# -----------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------
+# Python packages
+# -----------------------
+*.egg-info/
+dist/
+build/

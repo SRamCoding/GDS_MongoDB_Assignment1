@@ -59,11 +59,16 @@ producer_conf = {
 }
 producer = SerializingProducer(producer_conf)
 
-
-# ---------- Leer CSV con Pandas y producir mensajes ----------
-def produce_from_csv(file_path: str):
-    df = pd.read_csv(file_path)
-    
+# ---------- Forzar a que el mensaje a enviar encaje según el esquema del topic ----------
+def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Limpia y transforma el DataFrame para que sea compatible con el data contract.
+    - Convierte TRANSPORTATION_DISTANCE_IN_KM a Int64 (soporta nulos).
+    - Reemplaza NaN por None SOLO en columnas de texto (para JSON/Avro).
+    - Limpia Driver_MobileNo (string, sin '.0' al final).
+    - Convierte Minimum_kms_to_be_covered_in_a_day a string y elimina '.0' al final.
+    """
+    # Asumimos que cada viaje no puede tener como distancia recorrida 0 por ende, si se encontrara un 0 significa un valor desconocido.
     df["TRANSPORTATION_DISTANCE_IN_KM"] = df["TRANSPORTATION_DISTANCE_IN_KM"].fillna(0).astype(int)
     
     df = df.replace({np.nan: None})
@@ -83,6 +88,15 @@ def produce_from_csv(file_path: str):
         .str.replace(r"\.0$", "", regex=True)
     )
 
+    return df
+
+
+# ---------- Leer CSV con Pandas y producir mensajes ----------
+def produce_from_csv(file_path: str):
+
+    df = pd.read_csv(file_path)
+    
+    df = clean_dataframe(df)
 
     for _, row in df.iterrows():
         try:

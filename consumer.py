@@ -93,7 +93,7 @@ while running:
 
     except Exception as e:
         print(f"❌ Error in consumer loop: {e}")
-        break
+        continue
 
 # Cierre limpio
 consumer.close()
