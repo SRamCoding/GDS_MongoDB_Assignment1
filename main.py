@@ -18,6 +18,10 @@ collection = db[MONGO_COLLECTION]
 
 app = FastAPI(title="Transport API", version="1.0")
 
+# ---------- Inicio ----------
+@app.get("/")
+def root():
+    return {"message": "API is running!"}
 
 # ---------- Helpers ----------
 def serialize_doc(doc):
